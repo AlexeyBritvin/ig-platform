@@ -1,0 +1,78 @@
+<h1>Create Interest Group</h1>
+<form class="form" [formGroup]="form" (ngSubmit)="submit()">
+  <div fxLayout="row wrap" fxLayoutGap="24px">
+    <div class="left">
+      <div>
+        <mat-form-field fxFlex="300px">
+          <mat-label>Bidder</mat-label>
+          <mat-select
+            formControlName="bidder"
+            disableOptionCentering="true"
+            placeholder="Select placeholder"
+          >
+            <mat-option value="custom_bidder">Custom Bidder</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field fxFlex="300px">
+          <mat-label>Description</mat-label>
+          <textarea
+            formControlName="description"
+            rows="5"
+            matInput
+            placeholder="Placeholder value"
+          ></textarea>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field fxFlex="120px">
+          <mat-label>Data Fee, CPM</mat-label>
+          <input formControlName="data_fee" matInput type="number" min="0" />
+          <span matPrefix>$</span>
+          <span matSuffix>CPM</span>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="right">
+      <div>
+        <mat-form-field fxFlex="300px">
+          <mat-label>Group Name</mat-label>
+          <input
+            formControlName="name"
+            matInput
+            placeholder="Placeholder value"
+            required
+          />
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field fxFlex="300px">
+          <mat-label>Advertiser</mat-label>
+          <mat-select
+            formControlName="advertiser"
+            disableOptionCentering="true"
+            placeholder="Select placeholder"
+          >
+            <mat-option value="500123">500123</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-checkbox formControlName="availability">
+          Available for all advertisers
+        </mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <button mat-button color="primary" cds-type="very-strong">
+    Create Group
+  </button>
+</form>
+
+<mat-divider></mat-divider>
