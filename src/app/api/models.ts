@@ -9,7 +9,7 @@ export interface InterestGroup {
   id: number;
   name: string;
   bidder: number;
-  description: string;
+  description?: string;
   data_fee: number;
   advertiser: number;
   availability: boolean;

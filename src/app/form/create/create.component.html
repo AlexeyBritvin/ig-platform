@@ -10,7 +10,9 @@
             disableOptionCentering="true"
             placeholder="Select placeholder"
           >
-            <mat-option value="custom_bidder">Custom Bidder</mat-option>
+            <mat-option *ngFor="let bidder of bidders" [value]="bidder.id">
+              {{ bidder.name }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -30,7 +32,13 @@
       <div>
         <mat-form-field fxFlex="120px">
           <mat-label>Data Fee, CPM</mat-label>
-          <input formControlName="data_fee" matInput type="number" min="0" />
+          <input
+            formControlName="data_fee"
+            matInput
+            type="number"
+            min="0"
+            step="0.1"
+          />
           <span matPrefix>$</span>
           <span matSuffix>CPM</span>
         </mat-form-field>
@@ -58,7 +66,12 @@
             disableOptionCentering="true"
             placeholder="Select placeholder"
           >
-            <mat-option value="500123">500123</mat-option>
+            <mat-option
+              *ngFor="let advertiser of advertisers"
+              [value]="advertiser.id"
+            >
+              {{ advertiser.name }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -70,9 +83,27 @@
       </div>
     </div>
   </div>
-  <button mat-button color="primary" cds-type="very-strong">
+  <button mat-button color="primary" cds-type="very-strong" type="submit">
     Create Group
   </button>
 </form>
 
 <mat-divider></mat-divider>
+
+<h2>Script</h2>
+<div fxLayout="row wrap" fxLayoutGap="24px">
+  <mat-form-field fxFlex="300px">
+    <mat-label class="cdk-visually-hidden">Textarea no label</mat-label>
+    <textarea rows="5" matInput readonly [ngModel]="iframeScript"></textarea>
+  </mat-form-field>
+
+  <button
+    mat-button
+    color="secondary"
+    type="button"
+    [disabled]="!iframeScript"
+    (click)="copy()"
+  >
+    Copy
+  </button>
+</div>
