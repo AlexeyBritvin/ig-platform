@@ -1,3 +1,27 @@
+<mat-toolbar class="toolbar">
+  <div class="header content">
+    <div fxLayout="column" fxLayoutAlign="center start" class="toolbar-left">
+      <span class="cds-p1-bold">IG Manager</span>
+    </div>
+    <div class="toolbar-right">
+      <div fxLayout="column" fxLayoutAlign="center center" class="px-2">
+        <a routerLink="/list" class="cds-p1-bold">List</a>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" class="px-2">
+        <a routerLink="ig/create" class="cds-p1-bold">Create</a>
+      </div>
+      <mat-divider class="mx-2 h-100" [vertical]="true"></mat-divider>
+      <button
+        mat-icon-button
+        color="secondary"
+        cds-type="very-weak"
+        aria-label="Expend"
+      >
+        <mat-icon>expand_more</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>
 <section class="content">
-  <ig-create></ig-create>
+  <router-outlet></router-outlet>
 </section>
