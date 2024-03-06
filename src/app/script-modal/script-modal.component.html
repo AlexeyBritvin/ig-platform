@@ -1,0 +1,39 @@
+<div class="cds-modal-container">
+  <cds-layout-modal-header>
+    <div cds-modal-header-section-title>Script for IG {{ data.name }}</div>
+
+    <div cds-modal-header-section-right>
+      <button
+        mat-icon-button
+        color="secondary"
+        cds-type="very-weak"
+        data-test="button-close-modal"
+        (click)="onClose()"
+        aria-label="close modal"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </cds-layout-modal-header>
+
+  <div cds-modal-body>
+    <mat-form-field class="w-100">
+      <mat-label class="cdk-visually-hidden">Textarea no label</mat-label>
+      <textarea rows="5" matInput readonly [ngModel]="iframeScript"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div cds-modal-footer>
+    <button mat-button color="secondary" cds-type="very-weak" (click)="copy()">
+      Copy
+    </button>
+    <button
+      mat-button
+      color="primary"
+      cds-type="very-strong"
+      (click)="onClose()"
+    >
+      Close
+    </button>
+  </div>
+</div>

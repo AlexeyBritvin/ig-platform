@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
   inject,
@@ -13,9 +12,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
   CdsButtonModule,
   CdsCheckboxModule,
+  CdsDialogModule,
+  CdsDialogPanelClasses,
   CdsDividerModule,
   CdsFormFieldModule,
   CdsIconModule,
@@ -34,6 +36,7 @@ import {
   InterestGroupService,
   WithName,
 } from 'src/app/api';
+import { ScriptModalComponent } from 'src/app/script-modal/script-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -52,6 +55,7 @@ import {
     CdsCheckboxModule,
     CdsDividerModule,
     CdsSnackbarModule,
+    CdsDialogModule,
   ],
   selector: 'ig-create',
   templateUrl: './create.component.html',
@@ -64,7 +68,7 @@ export class CreateComponent implements OnInit {
   private advService = inject(AdvertiserService);
   private bidderService = inject(BiddersService);
   private igService = inject(InterestGroupService);
-  private cdr = inject(ChangeDetectorRef);
+  private dialog = inject(MatDialog);
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -88,27 +92,20 @@ export class CreateComponent implements OnInit {
     this.bidderService.get().subscribe((data) => (this.bidders = data));
   }
 
-  private createIframeScript(value: InterestGroup) {
-    const clientId = 500002;
-    this.iframeScript = `<iframe src="https://gpsb-reims.criteo.com/paapi/join_ig?advertiser_id=${clientId}_${value.advertiser}&ig_name=${value.name}"></iframe>`;
-  }
-
   submit() {
     this.igService
       .create(this.formValue as unknown as InterestGroupCreate)
       .subscribe((res: InterestGroup) => {
-        this.createIframeScript(res);
-        this.cdr.detectChanges();
+        this.openModal(res);
       });
   }
 
-  copy() {
-    this.snackbar.open(
-      {
-        type: 'success',
-        message: 'The Script has been successfully copied!',
-      },
-      1000
-    );
+  openModal(ig: InterestGroup): void {
+    const panelClass: CdsDialogPanelClasses[] = ['cds-modal', 'small'];
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.panelClass = panelClass;
+    dialogConfig.data = ig;
+
+    this.dialog.open(ScriptModalComponent, dialogConfig);
   }
 }

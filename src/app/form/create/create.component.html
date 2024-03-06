@@ -83,27 +83,13 @@
       </div>
     </div>
   </div>
-  <button mat-button color="primary" cds-type="very-strong" type="submit">
+  <button
+    mat-button
+    color="primary"
+    cds-type="very-strong"
+    type="submit"
+    [disabled]="form.invalid"
+  >
     Create Group
   </button>
 </form>
-
-<mat-divider></mat-divider>
-
-<h2>Script</h2>
-<div fxLayout="row wrap" fxLayoutGap="24px">
-  <mat-form-field fxFlex="300px">
-    <mat-label class="cdk-visually-hidden">Textarea no label</mat-label>
-    <textarea rows="5" matInput readonly [ngModel]="iframeScript"></textarea>
-  </mat-form-field>
-
-  <button
-    mat-button
-    color="secondary"
-    type="button"
-    [disabled]="!iframeScript"
-    (click)="copy()"
-  >
-    Copy
-  </button>
-</div>
