@@ -24,6 +24,7 @@
     "@criteo/cds15-library": "^0.0.90996",
     "@criteo/cds15-styles": "^0.0.90996",
     "@ngneat/until-destroy": "^10.0.0",
+    "js-md5": "^0.8.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
