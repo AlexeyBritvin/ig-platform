@@ -1,4 +1,4 @@
-<h1>Create Interest Group</h1>
+<h1>{{ id ? "Edit" : "Create" }} Interest Group</h1>
 <form class="form" [formGroup]="form" (ngSubmit)="submit()">
   <div fxLayout="row wrap" fxLayoutGap="24px">
     <div class="left">
@@ -83,13 +83,25 @@
       </div>
     </div>
   </div>
-  <button
-    mat-button
-    color="primary"
-    cds-type="very-strong"
-    type="submit"
-    [disabled]="form.invalid"
-  >
-    Create Group
-  </button>
+  <div fxLayout="row" fxLayoutGap="24px">
+    <button
+      mat-button
+      color="primary"
+      cds-type="very-strong"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      {{ id ? "Save Group" : "Create Group" }}
+    </button>
+    <button
+      *ngIf="id"
+      mat-button
+      color="secondary"
+      cds-type="very-strong"
+      type="button"
+      (click)="openModal()"
+    >
+      Copy Script
+    </button>
+  </div>
 </form>

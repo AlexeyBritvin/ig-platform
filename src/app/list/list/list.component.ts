@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import {
   CdsButtonModule,
   CdsDialogModule,
@@ -36,6 +37,7 @@ import { ScriptModalComponent } from 'src/app/script-modal/script-modal.componen
 export class ListComponent {
   private igService = inject(InterestGroupService);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   dataSource$ = this.igService.get();
 
@@ -56,5 +58,9 @@ export class ListComponent {
     dialogConfig.data = ig;
 
     this.dialog.open(ScriptModalComponent, dialogConfig);
+  }
+
+  onEdit(element: InterestGroup) {
+    this.router.navigate(['ig', `${element.id}`]);
   }
 }

@@ -4,7 +4,7 @@ import { CreateComponent } from './form/create/create.component';
 import { ListComponent } from './list/list/list.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'ig' },
+  { path: '', pathMatch: 'full', redirectTo: 'list' },
   {
     path: 'ig',
     children: [
