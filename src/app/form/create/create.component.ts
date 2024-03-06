@@ -7,12 +7,14 @@ import {
 } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout';
 import {
-  FormBuilder,
+  FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   CdsButtonModule,
   CdsCheckboxModule,
@@ -27,7 +29,8 @@ import {
   CdsTooltipModule,
   SnackbarService,
 } from '@criteo/cds15-library';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { filter, map } from 'rxjs';
 import {
   AdvertiserService,
   BiddersService,
@@ -63,20 +66,31 @@ import { ScriptModalComponent } from 'src/app/script-modal/script-modal.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private snackbar = inject(SnackbarService);
   private advService = inject(AdvertiserService);
   private bidderService = inject(BiddersService);
   private igService = inject(InterestGroupService);
   private dialog = inject(MatDialog);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  form = this.fb.group({
-    name: ['', Validators.required],
-    bidder: [null, Validators.required],
-    description: [''],
-    data_fee: [0, Validators.min(0)],
-    advertiser: [null, Validators.required],
-    availability: [true],
+  id!: number | null;
+
+  form = new FormGroup({
+    name: new FormControl<string>('', {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
+    bidder: new FormControl<null | number>(null, {
+      validators: Validators.required,
+    }),
+    description: new FormControl<string | null>(null),
+    data_fee: new FormControl(0, {
+      nonNullable: true,
+      validators: Validators.min(0),
+    }),
+    advertiser: new FormControl<number | null>(null, Validators.required),
+    availability: new FormControl<boolean>(true, { nonNullable: true }),
   });
 
   iframeScript: string = '';
@@ -88,23 +102,97 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      this.id = Number(params.get('id'));
+    });
     this.advService.get().subscribe((data) => (this.advertisers = data));
     this.bidderService.get().subscribe((data) => (this.bidders = data));
+
+    if (this.id) {
+      this.igService
+        .get()
+        .pipe(
+          map((groups) => groups.find((group) => group.id === this.id)),
+          filter((group) => !!group)
+        )
+        .subscribe((value: InterestGroup | undefined) => {
+          if (!value) return;
+          this.form.patchValue({
+            name: value.name,
+            bidder: value.bidder,
+            advertiser: value.advertiser,
+            description: value.description,
+            data_fee: value.data_fee,
+            availability: value.availability,
+          });
+        });
+    }
   }
 
   submit() {
+    this.id ? this.save() : this.create();
+  }
+
+  private create() {
     this.igService
       .create(this.formValue as unknown as InterestGroupCreate)
-      .subscribe((res: InterestGroup) => {
-        this.openModal(res);
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: async (res: InterestGroup) => {
+          await this.router.navigate(['ig', `${res.id}`]);
+          this.snackbar.open(
+            {
+              type: 'success',
+              message: 'The Interest Group has been successfully created!',
+            },
+            1000
+          );
+        },
+        error: () =>
+          this.snackbar.open(
+            {
+              type: 'error',
+              message: 'Could not create the Interest Group',
+            },
+            1500
+          ),
       });
   }
 
-  openModal(ig: InterestGroup): void {
+  private save() {
+    this.igService
+      .edit(this.formValue as unknown as InterestGroup)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: () => {
+          this.snackbar.open(
+            {
+              type: 'success',
+              message: 'The Interest Group has been successfully saved!',
+            },
+            1000
+          );
+        },
+        error: () =>
+          this.snackbar.open(
+            {
+              type: 'error',
+              message: 'Could not save the Interest Group',
+            },
+            1500
+          ),
+      });
+  }
+
+  openModal(): void {
     const panelClass: CdsDialogPanelClasses[] = ['cds-modal', 'small'];
     const dialogConfig = new MatDialogConfig();
     dialogConfig.panelClass = panelClass;
-    dialogConfig.data = ig;
+    const data: Record<string, any> = this.formValue;
+    if (this.id) {
+      data['id'] = this.id;
+    }
+    dialogConfig.data = data;
 
     this.dialog.open(ScriptModalComponent, dialogConfig);
   }
