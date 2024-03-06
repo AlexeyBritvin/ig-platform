@@ -1,1 +1,65 @@
-<p>list works!</p>
+<h1>Interest Group List</h1>
+
+<table
+  mat-table
+  cds-type="medium"
+  [dataSource]="dataSource$"
+  data-test="shared-table-default"
+>
+  <!-- Id Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>Id</th>
+    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <!-- Bidder Column -->
+  <ng-container matColumnDef="bidder">
+    <th mat-header-cell *matHeaderCellDef>Bidder</th>
+    <td mat-cell *matCellDef="let element">{{ element.bidder }}</td>
+  </ng-container>
+
+  <!-- Advertiser Column -->
+  <ng-container matColumnDef="advertiser">
+    <th mat-header-cell *matHeaderCellDef>Advertiser</th>
+    <td mat-cell *matCellDef="let element">{{ element.advertiser }}</td>
+  </ng-container>
+
+  <!-- Description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Description</th>
+    <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+  </ng-container>
+
+  <!-- Data Fee Column -->
+  <ng-container matColumnDef="data_fee">
+    <th mat-header-cell *matHeaderCellDef>Data Fee, $</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.data_fee | currency : "USD" }}
+    </td>
+  </ng-container>
+
+  <!-- Actions -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <button
+        mat-icon-button
+        color="secondary"
+        cds-type="very-weak"
+        attr.aria-label="Edit element {{ element.name }}"
+        (click)="openModal(element)"
+      >
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
