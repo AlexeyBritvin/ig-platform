@@ -24,7 +24,13 @@
   </div>
 
   <div cds-modal-footer>
-    <button mat-button color="secondary" cds-type="very-weak" (click)="copy()">
+    <button
+      mat-button
+      color="secondary"
+      [cdkCopyToClipboard]="iframeScript"
+      cds-type="very-weak"
+      (click)="copy()"
+    >
       Copy
     </button>
     <button

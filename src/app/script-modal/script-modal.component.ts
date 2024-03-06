@@ -1,3 +1,4 @@
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout';
@@ -20,6 +21,7 @@ import { InterestGroup } from '../api';
     CommonModule,
     FormsModule,
     FlexModule,
+    ClipboardModule,
     CdsFormFieldModule,
     CdsInputModule,
     CdsModalModule,
