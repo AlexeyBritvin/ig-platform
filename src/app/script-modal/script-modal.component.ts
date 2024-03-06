@@ -12,7 +12,8 @@ import {
   CdsModalModule,
   SnackbarService,
 } from '@criteo/cds15-library';
-import { InterestGroup } from '../api';
+import { md5 } from 'js-md5';
+import { ADVERTISER_ID, InterestGroup } from '../api';
 
 @Component({
   selector: 'ig-script-modal',
@@ -44,8 +45,14 @@ export class ScriptModalComponent {
   iframeScript: string = '';
 
   private createIframeScript(value: InterestGroup) {
-    const clientId = 500002;
-    this.iframeScript = `<iframe src="https://gpsb-reims.criteo.com/paapi/join_ig?advertiser_id=${clientId}_${value.advertiser}&ig_name=${value.name}"></iframe>`;
+    const userId = 1;
+    md5(`igap_${userId}_${value.name}`);
+    const hash = md5.create();
+    const hashedString = hash.toString();
+    const advertiserId = value.advertiser
+      ? `${value.advertiser_external_id}_${value.advertiser}`
+      : ADVERTISER_ID;
+    this.iframeScript = `<iframe src="https://gpsb-reims.criteo.com/paapi/join_ig?advertiser_id=${advertiserId}&ig_name=${hashedString}"></iframe>`;
   }
 
   copy() {

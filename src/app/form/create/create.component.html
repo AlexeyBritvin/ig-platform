@@ -8,7 +8,7 @@
           <mat-select
             formControlName="bidder"
             disableOptionCentering="true"
-            placeholder="Select placeholder"
+            placeholder="Please Select value"
           >
             <mat-option *ngFor="let bidder of bidders" [value]="bidder.id">
               {{ bidder.name }}
@@ -24,7 +24,7 @@
             formControlName="description"
             rows="5"
             matInput
-            placeholder="Placeholder value"
+            placeholder="Description of Interest Group"
           ></textarea>
         </mat-form-field>
       </div>
@@ -52,7 +52,7 @@
           <input
             formControlName="name"
             matInput
-            placeholder="Placeholder value"
+            placeholder="Placeholder Shoppers"
             required
           />
         </mat-form-field>
@@ -64,7 +64,7 @@
           <mat-select
             formControlName="advertiser"
             disableOptionCentering="true"
-            placeholder="Select placeholder"
+            placeholder="Please Select"
           >
             <mat-option
               *ngFor="let advertiser of advertisers"
@@ -85,18 +85,19 @@
   </div>
   <div fxLayout="row" fxLayoutGap="24px">
     <button
+      *ngIf="!id"
       mat-button
       color="primary"
       cds-type="very-strong"
       type="submit"
       [disabled]="form.invalid"
     >
-      {{ id ? "Save Group" : "Create Group" }}
+      Create Group
     </button>
     <button
       *ngIf="id"
       mat-button
-      color="secondary"
+      color="primary"
       cds-type="very-strong"
       type="button"
       (click)="openModal()"

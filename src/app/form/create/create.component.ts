@@ -30,8 +30,9 @@ import {
   SnackbarService,
 } from '@criteo/cds15-library';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { filter, map } from 'rxjs';
+import { filter, map, startWith } from 'rxjs';
 import {
+  Advertiser,
   AdvertiserService,
   BiddersService,
   InterestGroup,
@@ -89,12 +90,11 @@ export class CreateComponent implements OnInit {
       nonNullable: true,
       validators: Validators.min(0),
     }),
-    advertiser: new FormControl<number | null>(null, Validators.required),
+    advertiser: new FormControl<number | string | null>(null),
     availability: new FormControl<boolean>(true, { nonNullable: true }),
   });
 
-  iframeScript: string = '';
-  advertisers: WithName[] = [];
+  advertisers: Advertiser[] = [];
   bidders: WithName[] = [];
 
   private get formValue() {
@@ -105,6 +105,11 @@ export class CreateComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       this.id = Number(params.get('id'));
     });
+    this.form.controls.availability.valueChanges
+      .pipe(startWith(!!this.form.value.availability), untilDestroyed(this))
+      .subscribe((value) => {
+        this.onAvailabilityChange(value);
+      });
     this.advService.get().subscribe((data) => (this.advertisers = data));
     this.bidderService.get().subscribe((data) => (this.bidders = data));
 
@@ -112,6 +117,7 @@ export class CreateComponent implements OnInit {
       this.igService
         .get()
         .pipe(
+          untilDestroyed(this),
           map((groups) => groups.find((group) => group.id === this.id)),
           filter((group) => !!group)
         )
@@ -125,7 +131,20 @@ export class CreateComponent implements OnInit {
             data_fee: value.data_fee,
             availability: value.availability,
           });
+          this.form.disable();
         });
+    }
+  }
+
+  private onAvailabilityChange(value: boolean) {
+    if (this.id) return;
+    const control = this.form.controls.advertiser;
+    if (value) {
+      control.removeValidators(Validators.required);
+      control.disable();
+    } else {
+      control.addValidators(Validators.required);
+      control.enable();
     }
   }
 
@@ -134,8 +153,12 @@ export class CreateComponent implements OnInit {
   }
 
   private create() {
+    const data = this.formValue;
+    // if (data.availability) {
+    //   data.advertiser = ADVERTISER_ID;
+    // }
     this.igService
-      .create(this.formValue as unknown as InterestGroupCreate)
+      .create(data as unknown as InterestGroupCreate)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: async (res: InterestGroup) => {

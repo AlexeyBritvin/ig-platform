@@ -2,24 +2,23 @@
   <div class="header content">
     <div fxLayoutGap="24px" fxLayoutAlign="center start" class="toolbar-left">
       <img src="../assets/criteo-logo-orange.svg" alt="logo" />
-      <span class="cds-p1-bold">IG Activation Platform</span>
+      <span class="cds-title-bold">IG Activation Platform</span>
     </div>
     <div class="toolbar-right">
-      <div fxLayout="column" fxLayoutAlign="center center" class="px-2">
+      <div fxLayout="column" fxLayoutAlign="center center" class="px-1">
         <a routerLink="/list" class="cds-p1-bold">List</a>
       </div>
-      <div fxLayout="column" fxLayoutAlign="center center" class="px-2">
-        <a routerLink="ig/create" class="cds-p1-bold">Create</a>
+      <div fxLayout="column" fxLayoutAlign="center center" class="px-1">
+        <button
+          mat-button
+          color="primary"
+          cds-type="very-strong"
+          cds-size="small"
+          (click)="onCreate()"
+        >
+          Create
+        </button>
       </div>
-      <mat-divider class="mx-2 h-100" [vertical]="true"></mat-divider>
-      <button
-        mat-icon-button
-        color="secondary"
-        cds-type="very-weak"
-        aria-label="Expend"
-      >
-        <mat-icon>expand_more</mat-icon>
-      </button>
     </div>
   </div>
 </mat-toolbar>
